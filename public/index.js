@@ -1,20 +1,7 @@
 let transactions = [];
 let myChart;
 
-fetch("/api/transaction")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    // save db data on global variable
-    transactions = data;
-
-    populateTotal();
-    populateTable();
-    populateChart();
-  });
-
-function populateTotal() {
+const populateTotal = () => {
   // reduce transaction amounts to a single total value
   let total = transactions.reduce((total, t) => {
     return total + parseInt(t.value);
@@ -24,7 +11,7 @@ function populateTotal() {
   totalEl.textContent = total;
 }
 
-function populateTable() {
+const populateTable = () => {
   let tbody = document.querySelector("#tbody");
   tbody.innerHTML = "";
 
@@ -40,7 +27,7 @@ function populateTable() {
   });
 }
 
-function populateChart() {
+const populateChart = () => {
   // copy array and reverse it
   let reversed = transactions.slice().reverse();
   let sum = 0;
@@ -66,19 +53,19 @@ function populateChart() {
 
   myChart = new Chart(ctx, {
     type: 'line',
-      data: {
-        labels,
-        datasets: [{
-            label: "Total Over Time",
-            fill: true,
-            backgroundColor: "#6666ff",
-            data
-        }]
+    data: {
+      labels,
+      datasets: [{
+        label: "Total Over Time",
+        fill: true,
+        backgroundColor: "#6666ff",
+        data
+      }]
     }
   });
 }
 
-function sendTransaction(isAdding) {
+const sendTransaction = isAdding => {
   let nameEl = document.querySelector("#t-name");
   let amountEl = document.querySelector("#t-amount");
   let errorEl = document.querySelector(".form .error");
@@ -87,8 +74,7 @@ function sendTransaction(isAdding) {
   if (nameEl.value === "" || amountEl.value === "") {
     errorEl.textContent = "Missing Information";
     return;
-  }
-  else {
+  } else {
     errorEl.textContent = "";
   }
 
@@ -111,43 +97,55 @@ function sendTransaction(isAdding) {
   populateChart();
   populateTable();
   populateTotal();
-  
-  // also send to server
+
+  // also send to mongodb server
   fetch("/api/transaction", {
-    method: "POST",
-    body: JSON.stringify(transaction),
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "Content-Type": "application/json"
-    }
-  })
-  .then(response => {    
-    return response.json();
-  })
-  .then(data => {
-    if (data.errors) {
-      errorEl.textContent = "Missing Information";
-    }
-    else {
+      method: "POST",
+      body: JSON.stringify(transaction),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      if (data.errors) {
+        errorEl.textContent = "Missing Information";
+      } else {
+        // clear form
+        nameEl.value = "";
+        amountEl.value = "";
+      }
+    })
+    .catch(err => {
+      // fetch failed, so save in indexed db
+      saveRecord(transaction);
+
       // clear form
       nameEl.value = "";
       amountEl.value = "";
-    }
-  })
-  .catch(err => {
-    // fetch failed, so save in indexed db
-    saveRecord(transaction);
-
-    // clear form
-    nameEl.value = "";
-    amountEl.value = "";
-  });
+    });
 }
 
-document.querySelector("#add-btn").onclick = function() {
+fetch("/api/transaction")
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    // save db data on global variable
+    transactions = data;
+
+    populateTotal();
+    populateTable();
+    populateChart();
+  });
+
+document.querySelector("#add-btn").onclick = () => {
   sendTransaction(true);
 };
 
-document.querySelector("#sub-btn").onclick = function() {
+document.querySelector("#sub-btn").onclick = () => {
   sendTransaction(false);
 };
