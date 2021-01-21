@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(express.static("public"));
 // routes
 app.use(require("./routes/api-routes.js"));
+app.use(require("./routes/html-routes.js"));
 // set up connection to mongodb using mongoose
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/budget", {
   useNewUrlParser: true,
