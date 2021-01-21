@@ -8,10 +8,9 @@ request.onupgradeneeded = event => {
         autoIncrement: true
     });
 };
-// if request is successful, check if the browser is online then check the database
+// if request is successful, check if the browser is online then invoke checkDatabase function
 request.onsuccess = event => {
     db = event.target.result;
-
     if (navigator.onLine) {
         checkDatabase();
     }
@@ -31,31 +30,37 @@ const saveRecord = record => {
     pendingStore.add(record);
 }
 // function to check the budget indexedDB to see if there is any pending object stores and if so, add them to the mongodb using api/transaction/bulk post method
-const checkDatabase = event => {
+const checkDatabase = () => {
     // create a transaction on the pending db with readwrite access
     const transaction = db.transaction(["pending"], "readwrite");
     // access the pending objectStore
     const pendingStore = transaction.objectStore("pending");
     // get all records (if any) from the pending objectStore
     const allPending = pendingStore.getAll();
-    // check if the pendingStore has anything in it, if so post it to mongodb then clear the pendingStore
-    if (allPending.result.length > 0) {
-        fetch("api/transaction/bulk", {
-            method: "POST",
-            body: JSON.stringify(allPending.result),
-            headers: {
-                Accept: "application/json, text/plain, */*",
-                "Content-Type": "application/json",
-            },
-        }).then(res => {
-            res.json();
-        }).then(() => {
-            // create a transaction on the pending db with readwrite access
-            const transaction = db.transaction(["pending"], "readwrite");
-            // access the pending objectStore
-            const pendingStore = transaction.objectStore("pending");
-            // get all records (if any) from the pending objectStore
-            pendingStore.clear();
-        });
-    }
+    // if getAll() is successful
+    allPending.onsuccess = () => {
+        // check if the pendingStore has anything in it, if so post it to mongodb then clear the pendingStore
+        if (allPending.result.length > 0) {
+            fetch("api/transaction/bulk", {
+                method: "POST",
+                body: JSON.stringify(allPending.result),
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+            }).then(res => {
+                res.json();
+            }).then(() => {
+                // create a transaction on the pending db with readwrite access
+                const transaction = db.transaction(["pending"], "readwrite");
+                // access the pending objectStore
+                const pendingStore = transaction.objectStore("pending");
+                // clear all items in the pendingStore
+                pendingStore.clear();
+            });
+        }
+    };
 }
+
+// listen for app coming back online and invoke checkDatabase function
+window.addEventListener('online', checkDatabase);
