@@ -128,7 +128,7 @@ const sendTransaction = isAdding => {
       amountEl.value = "";
     });
 }
-
+// fetch all of the items in mongodb and populate total, table, and chart
 fetch("/api/transaction")
   .then(response => {
     return response.json();
