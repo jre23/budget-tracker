@@ -1,7 +1,3 @@
-const {
-    post
-} = require("../routes/api");
-
 // create a new request for a budget indexedDB
 const request = window.indexedDB.open("budget", 1);
 // create schema
