@@ -63,3 +63,7 @@ const checkDatabase = () => {
 
 // listen for app coming back online and invoke checkDatabase function
 window.addEventListener('online', checkDatabase);
+// export function used by index.js
+module.exports = {
+    saveRecord
+};

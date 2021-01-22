@@ -1,3 +1,5 @@
+const db = require("./db.js");
+
 let transactions = [];
 let myChart;
 
@@ -121,7 +123,7 @@ const sendTransaction = isAdding => {
     })
     .catch(err => {
       // fetch failed, so save in indexed db
-      saveRecord(transaction);
+      db.saveRecord(transaction);
 
       // clear form
       nameEl.value = "";
