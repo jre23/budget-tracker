@@ -1,5 +1,3 @@
-console.log("Hello from the service-worker.js file!");
-
 const FILES_TO_CACHE = [
     "/",
     "/index.html",
@@ -49,7 +47,7 @@ self.addEventListener("activate", event => {
         .then(() => self.clients.claim())
     );
 });
-
+// enable the service worker to intercept network requests.
 self.addEventListener("fetch", event => {
     // non GET requests are not cached and requests to other origins are not cached
     if (
@@ -70,6 +68,7 @@ self.addEventListener("fetch", event => {
                         cache.put(event.request, response.clone());
                         return response;
                     })
+                    // network request failed, try to get it from the cache.
                     .catch(() => caches.match(event.request));
             })
         );

@@ -17,7 +17,6 @@ request.onsuccess = event => {
 };
 // if request returns an error
 request.onerror = event => {
-    console.log("======onerror event======");
     console.log(event);
 }
 // function to save a record if browser if offline
