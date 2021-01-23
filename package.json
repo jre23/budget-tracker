@@ -9,7 +9,7 @@
     "build": "webpack --mode production",
     "webpack": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon start",
+    "start": "node server.js",
     "lite-server": "lite-server"
   },
   "repository": {
