@@ -4,14 +4,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "prestart": "npm run webpack",
-    "dev": "webpack --watch",
-    "build": "webpack --mode production",
-    "webpack": "webpack",
+    "dev": "webpack --mode development --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "lite-server": "lite-server",
-    "heroku-postbuild": "webpack --mode production"
+    "heroku-postbuild": "webpack -p"
   },
   "repository": {
     "type": "git",
