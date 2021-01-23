@@ -22,15 +22,11 @@ The goal for this project was to build a Progressive Web App where users can tra
 
 ## Screenshots
 
-![budget tracker screenshot 1]()
+![budget tracker screenshot 1](https://user-images.githubusercontent.com/69170823/105568810-21455e00-5cf1-11eb-9351-40e6fdd97c4b.png)
 
-![budget tracker screenshot 2]()
+![budget tracker screenshot 2](https://user-images.githubusercontent.com/69170823/105568829-50f46600-5cf1-11eb-8c41-4e2e5c81a062.png)
 
-![budget tracker screenshot 3]()
-
-![budget tracker screenshot 4]()
-
-![budget tracker screenshot 5]()
+![budget tracker screenshot 3](https://user-images.githubusercontent.com/69170823/105568852-84cf8b80-5cf1-11eb-9dd8-6e2eea988129.png)
 
 ## Technologies
 
