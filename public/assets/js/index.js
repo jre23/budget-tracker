@@ -1,8 +1,9 @@
+// require dependencies
 const db = require("./db.js");
-
+// define global variables
 let transactions = [];
 let myChart;
-
+// this function returns the total budget value of all of the transactions in the database
 const populateTotal = () => {
   // reduce transaction amounts to a single total value
   let total = transactions.reduce((total, t) => {
@@ -12,7 +13,7 @@ const populateTotal = () => {
   let totalEl = document.querySelector("#total");
   totalEl.textContent = total;
 }
-
+// this function creates the table showing each transaction name and amount
 const populateTable = () => {
   let tbody = document.querySelector("#tbody");
   tbody.innerHTML = "";
@@ -28,7 +29,7 @@ const populateTable = () => {
     tbody.appendChild(tr);
   });
 }
-
+// this function creates the chart showing total budget over time
 const populateChart = () => {
   // copy array and reverse it
   let reversed = transactions.slice().reverse();
@@ -143,11 +144,11 @@ fetch("/api/transaction")
     populateTable();
     populateChart();
   });
-
+// add funds click event listener
 document.querySelector("#add-btn").onclick = () => {
   sendTransaction(true);
 };
-
+// subtract funds click event listener
 document.querySelector("#sub-btn").onclick = () => {
   sendTransaction(false);
 };
