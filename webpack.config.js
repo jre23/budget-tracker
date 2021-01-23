@@ -9,7 +9,7 @@ const config = {
         publicPath: "",
         filename: "bundle.js"
     },
-    mode: "development",
+    mode: "production",
     plugins: [new WebpackPwaManifest({
         name: "Budget Tracker App",
         short_name: "Budget App",
