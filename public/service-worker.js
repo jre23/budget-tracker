@@ -1,3 +1,4 @@
+// define cache variables
 const FILES_TO_CACHE = [
     "/",
     "/index.html",
@@ -8,20 +9,21 @@ const FILES_TO_CACHE = [
     "/dist/assets/icons/icon_512x512.png",
     "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
 ];
-
 const STATIC_CACHE = "static-cache-v1";
 const RUNTIME_CACHE = "runtime-cache";
-
+// install
 self.addEventListener("install", event => {
+    // pre cache all static assets
     event.waitUntil(
         caches
         .open(STATIC_CACHE)
         .then(cache => cache.addAll(FILES_TO_CACHE))
+        // tell the browser to activate this service worker immediately once it has finished installing
         .then(() => self.skipWaiting())
     );
 });
 
-// The activate handler takes care of cleaning up old caches.
+// activate the service worker and remove old data from the cache
 self.addEventListener("activate", event => {
     const currentCaches = [STATIC_CACHE, RUNTIME_CACHE];
     event.waitUntil(
@@ -53,7 +55,6 @@ self.addEventListener("fetch", event => {
         event.respondWith(fetch(event.request));
         return;
     }
-
     // handle runtime GET requests for data from /api routes
     if (event.request.url.includes("/api/transaction")) {
         // make network request and fallback to cache if network request fails (offline)
@@ -70,14 +71,12 @@ self.addEventListener("fetch", event => {
         );
         return;
     }
-
     // use cache first for all other requests for performance
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
             if (cachedResponse) {
                 return cachedResponse;
             }
-
             // request is not in cache. make network request and cache the response
             return caches.open(RUNTIME_CACHE).then(cache => {
                 return fetch(event.request).then(response => {
