@@ -1,6 +1,7 @@
+// require dependencies
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 const path = require("path");
-
+// config webpack
 const config = {
     entry: "./public/assets/js/index.js",
     output: {
@@ -26,4 +27,5 @@ const config = {
         }]
     })]
 };
+// export config
 module.exports = config;
